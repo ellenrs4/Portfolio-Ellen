@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="pt-br">
+
+<head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Portfolio Front-end</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet" />
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        /* Base */
+                        "background-light": "#f5f5f5",
+                        "background-dark": "#0b0b0b",
+
+                        /* Superfícies */
+                        "surface-dark": "#141414",
+                        "surface-darker": "#101010",
+
+                        /* Texto */
+                        "text-primary": "#ffffff",
+                        "text-secondary": "#b5b5b5",
+                        "text-muted": "#6f6f6f",
+
+                        /* Destaque neutro */
+                        "primary": "#ffffff",
+                        "primary-hover": "#e5e5e5",
+
+                        /* Bordas */
+                        "border-subtle": "#2a2a2a",
+                    },
+                    fontFamily: {
+                        display: ["Inter", "sans-serif"]
+                    },
+                    backgroundImage: {
+                        noise:
+                            "url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0MDAiIGhlaWdodD0iNDAwIiB2aWV3Qm94PSIwIDAgNDAwIDQwMCI+PGZpbHRlciBpZD0ibm9pc2VGaWx0ZXIiPjxmZVR1cmJ1bGVuY2UgdHlwZT0iZnJhY3RhbE5vaXNlIiBiYXNlRnJlcXVlbmN5PSIwLjY1IiBudW1PY3RhdmVzPSIzIiBzdGl0Y2hUaWxlcz0ic3RpdGNoIi8+PC9maWx0ZXI+PHJlY3Qgd2lkdGg9IjEwMCUiIGhlaWdodD0iMTAwJSIgZmlsdGVyPSJ1cmwoI25vaXNlRmlsdGVyKSIgb3BhY2l0eT0iMC4wNSIvPjwvc3ZnPg==')",
+                    }
+                },
+            },
+        }
+
+document.addEventListener("DOMContentLoaded", () => {
+
+    const projects = [
+        {
+            title: "Engenheiros do Amanhã",
+            description: "Engenheiros do Amanhã é um site responsivo criado para apresentar seções com conteúdo educacional sobre robótica.",
+            tech: ["Vue.js", "D3.js"],
+            image: "img/eng.png"
+        },
+        {
+            title: "TaskMaster Pro",
+            description: "Project management system for remote teams.",
+            tech: ["React", "TypeScript", "Tailwind", "Node.js"],
+            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuB0jBncVrSQ-RdZbVoeDxlsa_9ODInfzdC5q8AXa_vCwVLSM-agwXb4WCf61CivcxoWtBfbxWkK2T_Fsq9wouJrpVFM1XVZY9IEncYJhsw0VkWC4QQHH7bBQjgFoGOaVSw2K5sM-_Gu1_r29vxnwniaBMDdTYiiTfT2Kk09715vrW0e2D0fvEPtx8EH192MwzQSg_-y-7btgGXHWLUoywv3ukcHpKkvn1bTXDajoiVprbQS8vS0Q6GxS1WlFPZZN5D3eaQ1kHAmtHI"
+        },
+        {
+            title: "Nexus Analytics",
+            description: "Advanced analytics dashboard with GraphQL integration.",
+            tech: ["Next.js", "GraphQL"],
+            image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBx-TJW35ZuJ06bfNiJbT1GbbSgraMbwabx8zj3uluAgN8Pssu_ipoJO9z_cVZg5JuYFlp4UhaBJ7sYoCGA-J8Dbd_8qmyoDVvE3LvdqT8RMqNgOzqV6fvc8eqjAnT1BclbW2ItfzMrhO85gcaegSGVj0huF8weZ2qByCzfhP1kooC6GkfvkOYsNwv7K2-e_xzcfH3P3_7WRndbKefaLxNOn2Y5LZXQb4nEwQxQwABIK2t_HVHDmAh4ZzBljLypNPuLi5VNYffuX70"
+        }
+    ];
+
+    let currentIndex = 1;
+
+    const prevBtn = document.getElementById("prevBtn");
+    const nextBtn = document.getElementById("nextBtn");
+
+    const prevCard = document.getElementById("prevCard");
+    const activeCard = document.getElementById("activeCard");
+    const nextCard = document.getElementById("nextCard");
+
+    const progressBar = document.querySelector(".bg-primary");
+    const currentNumber = document.querySelector(".font-mono");
+
+    function updateCarousel() {
+        const total = projects.length;
+
+        const prevIndex = (currentIndex - 1 + total) % total;
+        const nextIndex = (currentIndex + 1) % total;
+
+        const active = projects[currentIndex];
+        const prev = projects[prevIndex];
+        const next = projects[nextIndex];
+
+        // Atualiza título ativo
+        activeCard.querySelector("h2").textContent = active.title;
+        activeCard.querySelector("p").textContent = active.description;
+        activeCard.querySelector("img").src = active.image;
+
+        // Atualiza card anterior
+        prevCard.querySelector("h3").textContent = prev.title;
+        prevCard.querySelector("img").src = prev.image;
+
+        // Atualiza card próximo
+        nextCard.querySelector("h3").textContent = next.title;
+        nextCard.querySelector("img").src = next.image;
+
+        // Atualiza paginação
+        currentNumber.textContent = String(currentIndex + 1).padStart(2, "0");
+
+        // Atualiza barra
+        const percentage = ((currentIndex + 1) / total) * 100;
+        progressBar.style.width = percentage + "%";
+    }
+
+    nextBtn.addEventListener("click", () => {
+        currentIndex = (currentIndex + 1) % projects.length;
+        updateCarousel();
+    });
+
+    prevBtn.addEventListener("click", () => {
+        currentIndex = (currentIndex - 1 + projects.length) % projects.length;
+        updateCarousel();
+    });
+
+    updateCarousel();
+});
+    </script>
+    <style>
+        /*Barra de rolagem personalizada para um visual mais limpo */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        /* Simulação do efeito de foco do carrossel */
+        .card-perspective-left {
+            transform: perspective(1000px) rotateY(5deg) scale(0.95) translateX(0);
+            opacity: 0.6;
+            filter: blur(1px);
+        }
+
+        .card-perspective-right {
+            transform: perspective(1000px) rotateY(-5deg) scale(0.95) translateX(0);
+            opacity: 0.6;
+            filter: blur(1px);
+        }
+
+        .card-active {
+            transform: perspective(1000px) rotateY(0) scale(1) translateZ(20px);
+            z-index: 20;
+            box-shadow: 0 20px 50px -12px rgba(43, 140, 238, 0.25);
+        }
+    </style>
+</head>
+
+<body
+    class="bg-background-light dark:bg-background-dark font-display min-h-screen flex flex-col antialiased text-gray-900 dark:text-gray-100 overflow-x-hidden">
+    <!-- Barra de navegação para contexto -->
+    <nav class="w-full py-6 px-8 flex justify-between items-center bg-transparent z-50">
+        <div class="text-xl font-bold tracking-tight">Éllen</div>
+        <div class="hidden md:flex gap-8 text-sm font-medium text-gray-400">
+            <a class="hover:text-primary transition-colors" href="index.html">Home</a>
+
+        </div>
+        <button class="md:hidden text-gray-400">
+            <span class="material-icons">menu</span>
+        </button>
+    </nav>
+    <!-- Área de conteúdo principal -->
+    <main class="flex-grow flex flex-col justify-center items-center relative py-12 px-4 md:px-8">
+        <!-- Cabeçalho da seçãor -->
+        <header class="text-center mb-16 relative z-10">
+            <span
+                class="inline-block py-1 px-3 rounded-full bg-primary/10 text-primary text-xs font-semibold tracking-wider uppercase mb-4 border border-primary/20">Alguns Projetos</span>
+            <h1
+                class="text-3xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-500 mb-4">
+                Arquitetura &amp; Código
+            </h1>
+            <p class="text-gray-400 max-w-lg mx-auto text-sm md:text-base font-light">
+                Explore uma coleção de sistemas front-end, projetados com foco em desempenho e escalabilidade.
+            </p>
+        </header>
+        <!--Contêiner de carrossel -->
+        <div class="w-full max-w-7xl mx-auto relative h-[500px] md:h-[600px] flex items-center justify-center">
+            <!-- Navegação à esquerda -->
+            <button  id="nextBtn"
+                class="hidden md:flex absolute left-4 z-30 p-4 rounded-full bg-background-dark border border-gray-800 text-gray-400 hover:text-primary hover:border-primary/50 transition-all duration-300 group shadow-lg">
+                <span class="material-icons group-hover:-translate-x-1 transition-transform">arrow_back</span>
+            </button>
+            <!-- Pista do Carrossel -->
+            <div class="relative w-full h-full flex items-center justify-center perspective-1000">
+                <!-- Projeto anterior (esquerda) -->
+                <div  id="prevCard"
+                    class="hidden lg:block absolute left-[5%] xl:left-[10%] w-[350px] xl:w-[400px] h-[450px] bg-gray-900 rounded-xl border border-gray-800 overflow-hidden card-perspective-left transition-all duration-500 cursor-pointer hover:opacity-80">
+                    <div class="h-1/2 w-full bg-gray-800 relative">
+                        <img alt="Fintech dashboard interface with charts" class="w-full h-full object-cover opacity-60"
+                            src="img/eng.png" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
+                    </div>
+                    <div class="p-6 h-1/2 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-300 mb-2">Engenheiros do Amanhã</h3>
+                            <div class="flex gap-2 mb-4">
+                                <span
+                                    class="text-xs text-gray-500 border border-gray-700 rounded px-2 py-1">Vue.js</span>
+                                <span
+                                    class="text-xs text-gray-500 border border-gray-700 rounded px-2 py-1">D3.js</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Active Project (Center) -->
+                <div id="activeCard"
+                    class="relative w-[90%] md:w-[600px] lg:w-[700px] h-auto md:h-[500px] bg-gray-900/80 backdrop-blur-xl rounded-2xl border border-gray-700/50 overflow-hidden card-active transition-all duration-500 flex flex-col md:flex-row group">
+                    <!-- Image Section -->
+                    <div class="w-full md:w-3/5 h-64 md:h-full relative overflow-hidden">
+                        <div class="absolute inset-0 bg-primary/20 mix-blend-overlay z-10"></div>
+                        <img alt="Clean minimalist task management app interface"
+                            class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
+                           
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0jBncVrSQ-RdZbVoeDxlsa_9ODInfzdC5q8AXa_vCwVLSM-agwXb4WCf61CivcxoWtBfbxWkK2T_Fsq9wouJrpVFM1XVZY9IEncYJhsw0VkWC4QQHH7bBQjgFoGOaVSw2K5sM-_Gu1_r29vxnwniaBMDdTYiiTfT2Kk09715vrW0e2D0fvEPtx8EH192MwzQSg_-y-7btgGXHWLUoywv3ukcHpKkvn1bTXDajoiVprbQS8vS0Q6GxS1WlFPZZN5D3eaQ1kHAmtHI" />
+                        <!-- Overlay Gradient -->
+                        <div
+                            class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-gray-900 via-transparent to-transparent opacity-80 md:opacity-60 z-20">
+                        </div>
+                    </div>
+                    <!-- Content Section -->
+                    <div
+                        class="w-full md:w-2/5 p-6 md:p-8 flex flex-col justify-center bg-gray-900 relative z-30 border-t md:border-t-0 md:border-l border-gray-800">
+                        <div class="mb-auto">
+                            <span class="text-primary text-xs font-bold tracking-widest uppercase mb-2 block">Projetos em destaque</span>
+                            <h2 class="text-2xl md:text-3xl font-bold text-white mb-3">TaskMaster Pro</h2>
+                            <p class="text-gray-400 text-sm leading-relaxed mb-6">
+                                A comprehensive project management ecosystem designed for remote teams. Features
+                                real-time websocket updates and offline-first architecture.
+                            </p>
+                        </div>
+                        <div class="space-y-6">
+                            <!-- Tech Stack -->
+                            <div>
+                                <h4 class="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                                    Tecnologias</h4>
+                                <div class="flex flex-wrap gap-2">
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded bg-gray-800 text-xs font-medium text-gray-300 border border-gray-700">
+                                        HTML
+                                    </span>
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded bg-gray-800 text-xs font-medium text-gray-300 border border-gray-700">
+                                        JavaScript
+                                    </span>
+                                    <span
+                                        class="inline-flex items-center px-2.5 py-1 rounded bg-gray-800 text-xs font-medium text-gray-300 border border-gray-700">
+                                        Tailwind
+                                    </span>
+                                </div>
+                            </div>
+                            <!-- CTA -->
+                            <a class="inline-flex items-center justify-between w-full px-6 py-4 rounded-lg bg-primary text-white font-medium hover:bg-blue-600 transition-colors group/btn shadow-lg shadow-primary/25"
+                                href="https://github.com/ellenrs4">
+                                <span>GitHub</span>
+                                <span
+                                    class="material-icons text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <!--Próximo projeto (à direita) -->
+                <div id="nextCard"
+                    class="hidden lg:block absolute right-[5%] xl:right-[10%] w-[350px] xl:w-[400px] h-[450px] bg-gray-900 rounded-xl border border-gray-800 overflow-hidden card-perspective-right transition-all duration-500 cursor-pointer hover:opacity-80">
+                    <div class="h-1/2 w-full bg-gray-800 relative">
+                        <img alt="E-commerce analytics dashboard dark mode"
+                            class="w-full h-full object-cover opacity-60"
+                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBx-TJW35ZuJ06bfNiJbT1GbbSgraMbwabx8zj3uluAgN8Pssu_ipoJO9z_cVZg5JuYFlp4UhaBJ7sYoCGA-J8Dbd_8qmyoDVvE3LvdqT8RMqNgOzqV6fvc8eqjAnT1BclbW2ItfzMrhO85gcaegSGVj0huF8weZ2qByCzfhP1kooC6GkfvkOYsNwv7K2-e_xzcfH3P3_7WRndbKefaLxNOn2Y5LZXQb4nEwQxQwABIK2t_HVHDmAh4ZzBljLypNPuLi5VNYffuX70" />
+                        <div class="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent"></div>
+                    </div>
+                    <div class="p-6 h-1/2 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-xl font-bold text-gray-300 mb-2">Nexus Analytics</h3>
+                            <div class="flex gap-2 mb-4">
+                                <span
+                                    class="text-xs text-gray-500 border border-gray-700 rounded px-2 py-1">Next.js</span>
+                                <span
+                                    class="text-xs text-gray-500 border border-gray-700 rounded px-2 py-1">GraphQL</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Navegação à direita -->
+            <button id="prevBtn"
+                class="hidden md:flex absolute right-4 z-30 p-4 rounded-full bg-background-dark border border-gray-800 text-gray-400 hover:text-primary hover:border-primary/50 transition-all duration-300 group shadow-lg">
+                <span class="material-icons group-hover:translate-x-1 transition-transform">arrow_forward</span>
+            </button>
+        </div>
+        <!-- Pagination / Progress -->
+        <div class="mt-8 md:mt-12 flex items-center gap-4">
+            <span class="text-xs text-gray-500 font-mono">02</span>
+            <div class="w-32 h-1 bg-gray-800 rounded-full overflow-hidden">
+                <div class="h-full bg-primary w-1/3 rounded-full relative">
+                    <div class="absolute right-0 top-0 bottom-0 w-2 bg-white/50 blur-[2px]"></div>
+                </div>
+            </div>
+            <span class="text-xs text-gray-500 font-mono">06</span>
+        </div>
+    </main>
+    <!-- Background Elements for Atmosphere -->
+    <div class="fixed top-0 left-0 w-full h-full pointer-events-none -z-10 overflow-hidden">
+        <div class="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary/5 rounded-full blur-[120px]"></div>
+        <div class="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-blue-600/5 rounded-full blur-[120px]"></div>
+    </div>
+</body>
+
+</html>
